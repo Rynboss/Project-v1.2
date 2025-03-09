@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Love App</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Pacifico', cursive;
+        }
+        .hidden {
+            display: none;
+        }
+        .pulse {
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="bg-pink-100 flex items-center justify-center min-h-screen">
+    <div id="app" class="text-center">
+        <!-- Step 1: Name Input Page -->
+        <div id="step1" class="step">
+            <h1 class="text-2xl mb-4">Enter your name:</h1>
+            <input id="nameInput" type="text" class="border border-gray-300 p-2 rounded" placeholder="Your Name">
+            <button onclick="checkName()" class="mt-4 bg-pink-500 text-white py-2 px-4 rounded">Submit</button>
+            <p id="nameError" class="text-red-500 mt-4 hidden">Sorry, you're not the right person.</p>
+        </div>
+        <!-- Step 2: Love Confirmation -->
+        <div id="step2" class="step hidden">
+            <h1 class="text-2xl mb-4">Do you love Raiyan?</h1>
+            <button id="yesButton" onclick="loveYes()" class="bg-pink-500 text-white py-2 px-4 rounded">Yes</button>
+            <button id="noButton" onclick="loveNo()" class="bg-gray-500 text-white py-2 px-4 rounded ml-4">No</button>
+        </div>
+        <!-- Step 3: Love Promise -->
+        <div id="step3" class="step hidden">
+            <h1 class="text-2xl mb-4">Do you promise to love him forever?</h1>
+            <button onclick="promiseYes()" class="bg-pink-500 text-white py-2 px-4 rounded">Yes</button>
+            <button id="promiseNoButton" onclick="promiseNo()" class="bg-gray-500 text-white py-2 px-4 rounded ml-4">No</button>
+        </div>
+        <!-- Step 4: Love Scale -->
+        <div id="step4" class="step hidden">
+            <h1 class="text-2xl mb-4">How much do you love him?</h1>
+            <input id="loveScale" type="range" min="1" max="5" value="3" class="slider w-full">
+            <p id="loveScaleFeedback" class="mt-4"></p>
+            <button onclick="moveToStep(5)" id="nextButton" class="mt-4 hidden bg-pink-500 text-white py-2 px-4 rounded">Next</button>
+        </div>
+        <!-- Step 5: Additional Questions -->
+        <div id="step5" class="step hidden">
+            <h1 class="text-2xl mb-4">How much do you miss Raiyan when he's not around?</h1>
+            <button onclick="missRaiyan('A little')" class="bg-gray-500 text-white py-2 px-4 rounded">A little</button>
+            <button onclick="missRaiyan('Sometimes')" class="bg-gray-500 text-white py-2 px-4 rounded ml-4">Sometimes</button>
+            <button onclick="missRaiyan('All the time')" class="bg-gray-500 text-white py-2 px-4 rounded ml-4">All the time</button>
+            <button onclick="missRaiyan('I can\'t live without him')" class="bg-pink-500 text-white py-2 px-4 rounded ml-4">I can't live without him</button>
+            <p id="missFeedback" class="mt-4"></p>
+        </div>
+        <div id="step6" class="step hidden">
+            <h1 class="text-2xl mb-4">What do you love the most about Raiyan?</h1>
+            <textarea id="loveMost" class="border border-gray-300 p-2 rounded w-full" placeholder="Type your response here..."></textarea>
+            <button onclick="loveMostResponse()" class="mt-4 bg-pink-500 text-white py-2 px-4 rounded">Submit</button>
+            <p id="loveMostFeedback" class="text-red-500 mt-4 hidden">Come on, you must have something to say!</p>
+        </div>
+        <div id="step7" class="step hidden">
+            <h1 class="text-2xl mb-4">If you could describe Raiyan in one word, what would it be?</h1>
+            <input id="describeRaiyan" type="text" class="border border-gray-300 p-2 rounded w-full" placeholder="Type a word...">
+            <button onclick="describeRaiyanResponse()" class="mt-4 bg-pink-500 text-white py-2 px-4 rounded">Submit</button>
+            <p id="describeFeedback" class="mt-4"></p>
+        </div>
+        <div id="step8" class="step hidden">
+            <h1 class="text-2xl mb-4">Would you choose Raiyan over unlimited chocolates?</h1>
+            <button onclick="chooseRaiyan('Yes')" class="bg-pink-500 text-white py-2 px-4 rounded">Yes</button>
+            <button onclick="chooseRaiyan('No')" class="bg-gray-500 text-white py-2 px-4 rounded ml-4">Hmm... chocolate is tempting</button>
+            <p id="chocolateFeedback" class="mt-4"></p>
+        </div>
+        <div id="step9" class="step hidden">
+            <h1 class="text-2xl mb-4">How excited are you for our future together?</h1>
+            <input id="futureExcitement" type="range" min="1" max="10" value="5" class="slider w-full">
+            <p id="futureFeedback" class="mt-4"></p>
+            <button onclick="moveToStep(10)" id="nextButton2" class="mt-4 hidden bg-pink-500 text-white py-2 px-4 rounded">Next</button>
+        </div>
+        <div id="step10" class="step hidden">
+            <h1 class="text-2xl mb-4">If Raiyan was a teddy bear, would you hug him every night?</h1>
+            <button onclick="teddyBear('Yes')" class="bg-pink-500 text-white py-2 px-4 rounded">Of course!</button>
+            <button onclick="teddyBear('No')" class="bg-gray-500 text-white py-2 px-4 rounded ml-4">Maybe...</button>
+            <p id="teddyFeedback" class="mt-4"></p>
+        </div>
+        <div id="step11" class="step hidden">
+            <h1 class="text-2xl mb-4">Do you believe Raiyan is the best boyfriend in the world?</h1>
+            <button id="bestYesButton" onclick="bestBoyfriend('Yes')" class="bg-pink-500 text-white py-2 px-4 rounded">Yes</button>
+            <button id="bestNoButton" onclick="bestBoyfriend('No')" class="bg-gray-500 text-white py-2 px-4 rounded ml-4">No</button>
+        </div>
+        <!-- Step 12: Final Surprise -->
+        <div id="step12" class="step hidden">
+            <div class="flex items-center justify-center">
+                <div class="heart pulse text-red-600 text-6xl">❤</div>
+            </div>
+            <h1 class="text-2xl mt-4">Good Girl!</h1>
+            <button onclick="restart()" class="mt-4 bg-pink-500 text-white py-2 px-4 rounded">Home</button>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('loveScale').addEventListener('input', updateLoveScale);
+            document.getElementById('futureExcitement').addEventListener('input', updateFutureExcitement);
+        });
+
+        function checkName() {
+            const name = document.getElementById('nameInput').value;
+            const validNames = ['Vhumi', 'Anjum Afra Nadia', 'Anjum Afra'];
+            if (validNames.includes(name)) {
+                moveToStep(2);
+            } else {
+                document.getElementById('nameError').classList.remove('hidden');
+            }
+        }
+
+        function loveYes() {
+            moveToStep(3);
+        }
+
+        function loveNo() {
+            const yesButton = document.getElementById('yesButton');
+            const currentSize = parseInt(window.getComputedStyle(yesButton).fontSize);
+            yesButton.style.fontSize = ${currentSize + 5}px;
+        }
+
+        function promiseYes() {
+            moveToStep(4);
+        }
+
+        function promiseNo() {
+            document.getElementById('promiseNoButton').classList.add('hidden');
+        }
+
+        function updateLoveScale() {
+            const loveScale = document.getElementById('loveScale').value;
+            const feedback = document.getElementById('loveScaleFeedback');
+            const nextButton = document.getElementById('nextButton');
+            
+            if (loveScale < 5) {
+                feedback.textContent = "Are you sure you don't love him more?";
+                nextButton.classList.add('hidden');
+            } else {
+                feedback.textContent = "Let's go to the next step, Baby girl.";
+                nextButton.classList.remove('hidden');
+            }
+        }
+
+        function missRaiyan(option) {
+            const feedback = document.getElementById('missFeedback');
+            if (option === "I can't live without him") {
+                feedback.textContent = "";
+                moveToStep(6);
+            } else {
+                feedback.textContent = "Really? Are you sure it's not more?";
+            }
+        }
+
+        function loveMostResponse() {
+            const response = document.getElementById('loveMost').value;
+            const feedback = document.getElementById('loveMostFeedback');
+            if (response.trim() === "") {
+                feedback.classList.remove('hidden');
+            } else {
+                feedback.classList.add('hidden');
+                moveToStep(7);
+            }
+        }
+
+        function describeRaiyanResponse() {
+            const response = document.getElementById('describeRaiyan').value;
+            const feedback = document.getElementById('describeFeedback');
+            if (response.trim() !== "") {
+                feedback.textContent = "Aww, that's so sweet!";
+                moveToStep(8);
+            }
+        }
+
+        function chooseRaiyan(option) {
+            const feedback = document.getElementById('chocolateFeedback');
+            if (option === "Yes") {
+                feedback.textContent = "";
+                moveToStep(9);
+            } else {
+                feedback.textContent = "No way! Choose again!";
+            }
+        }
+
+        function updateFutureExcitement() {
+            const excitement = document.getElementById('futureExcitement').value;
+            const feedback = document.getElementById('futureFeedback');
+            const nextButton = document.getElementById('nextButton2');
+            
+            if (excitement < 8) {
+                feedback.textContent = "Come on, I know you're more excited than that!";
+                nextButton.classList.add('hidden');
+            } else {
+                feedback.textContent = excitement == 10 ? "That's my girl!" : "";
+                nextButton.classList.remove('hidden');
+            }
+        }
+
+        function teddyBear(option) {
+            const feedback = document.getElementById('teddyFeedback');
+            if (option === "Yes") {
+                feedback.textContent = "That's the right answer!";
+                moveToStep(11);
+            } else {
+                feedback.textContent = "Only 'Of course!' is acceptable!";
+            }
+        }
+
+        function bestBoyfriend(option) {
+            const feedback = document.getElementById('teddyFeedback');
+            if (option === "Yes") {
+                feedback.textContent = "You're the best girlfriend!";
+                moveToStep(12);
+            } else {
+                const yesButton = document.getElementById('bestYesButton');
+                const currentSize = parseInt(window.getComputedStyle(yesButton).fontSize);
+                yesButton.style.fontSize = ${currentSize + 5}px;
+            }
+        }
+
+        function moveToStep(stepNumber) {
+            document.querySelectorAll('.step').forEach(step => step.classList.add('hidden'));
+            document.getElementById(step${stepNumber}).classList.remove('hidden');
+        }
+
+        function restart() {
+            moveToStep(1);
+            document.getElementById('nameInput').value = '';
+            document.getElementById('nameError').classList.add('hidden');
+            document.getElementById('loveScale').value = 3;
+            document.getElementById('loveScaleFeedback').textContent = '';
+            document.getElementById('missFeedback').textContent = '';
+            document.getElementById('loveMost').value = '';
+            document.getElementById('loveMostFeedback').classList.add('hidden');
+            document.getElementById('describeRaiyan').value = '';
+            document.getElementById('describeFeedback').textContent = '';
+            document.getElementById('chocolateFeedback').textContent = '';
+            document.getElementById('futureExcitement').value = 5;
+            document.getElementById('futureFeedback').textContent = '';
+            document.getElementById('teddyFeedback').textContent = '';
+        }
+    </script>
+</body>
+</html>
