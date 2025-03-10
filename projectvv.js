@@ -20,7 +20,7 @@ function loveYes() {
 function loveNo() {
     const yesButton = document.getElementById('yesButton');
     const currentSize = parseInt(window.getComputedStyle(yesButton).fontSize);
-    yesButton.style.fontSize = ${currentSize + 5}px;
+    yesButton.style.fontSize = `${currentSize + 5}px`;
 }
 
 function promiseYes() {
@@ -117,13 +117,13 @@ function bestBoyfriend(option) {
     } else {
         const yesButton = document.getElementById('bestYesButton');
         const currentSize = parseInt(window.getComputedStyle(yesButton).fontSize);
-        yesButton.style.fontSize = ${currentSize + 5}px;
+        yesButton.style.fontSize = `${currentSize + 5}px`;
     }
 }
 
 function moveToStep(stepNumber) {
     document.querySelectorAll('.step').forEach(step => step.classList.add('hidden'));
-    document.getElementById(step${stepNumber}).classList.remove('hidden');
+    document.getElementById(`step${stepNumber}`).classList.remove('hidden');
 }
 
 function restart() {
